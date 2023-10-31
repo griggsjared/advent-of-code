@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AOCTest\Year2022\Day01;
+namespace AOCTest\Year2022\Day02;
 
 use AOC\PartEnum;
 use AOC\Year2022\Day01\Main;
