@@ -6,5 +6,5 @@ namespace AOC;
 
 interface MainInterface
 {
-    public function run(): string;
+    public function run(PartEnum $part): string|int;
 }

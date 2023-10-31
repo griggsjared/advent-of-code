@@ -6,6 +6,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/vendor/autoload.php';
 
 use AOC\MainInterface;
+use AOC\PartEnum;
 use splitbrain\phpcli\CLI;
 use splitbrain\phpcli\Options;
 
@@ -76,12 +77,23 @@ final class Handler extends CLI
 
         //run each class and print the answer
         foreach ($classes as $key => $class) {
-            $answer = (new $class())->run();
+            /**
+             * @var MainInterface
+             */
+            $dayClass = new $class();
+            $part1Answer = $dayClass->run(PartEnum::P1);
+            $part2answer = $dayClass->run(PartEnum::P2);
             $this->info(
                 sprintf(
-                    'Day: %s, Answer: %s',
+                    'Answers for Day: %s',
                     $key,
-                    $answer
+                )
+            );
+            $this->success(
+                sprintf(
+                    'Part 1: %s | Part 2: %s',
+                    $part1Answer,
+                    $part2answer
                 )
             );
         }
