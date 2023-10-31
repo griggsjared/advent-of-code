@@ -1,0 +1,29 @@
+{
+    "name": "griggsjared/advent-of-code",
+    "autoload": {
+        "psr-4": {
+            "AOC\\": "./src",
+            "AOCTest\\": "./tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jared Griggs",
+            "email": "griggsjared@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9",
+        "laravel/pint": "^1.13"
+    },
+    "require": {
+        "splitbrain/php-cli": "^1.2",
+        "symfony/var-dumper": "^6.3"
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit",
+        "cs": "./vendor/bin/pint",
+        "cs-test": "./vendor/bin/pint --test",
+        "cs-dirty": "./vendor/bin/pint --dirty"
+    }
+}

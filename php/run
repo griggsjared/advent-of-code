@@ -1,0 +1,102 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use AOC\MainInterface;
+use splitbrain\phpcli\CLI;
+use splitbrain\phpcli\Options;
+
+final class Handler extends CLI
+{
+    const START_YEAR = 2015;
+    const START_DAY = 1;
+    const END_YEAR = 2023;
+    const END_DAY = 25;
+
+    protected function setup(Options $options)
+    {
+        $options->registerOption('year', 'year to run', 'y', 'int');
+        $options->registerOption('day', 'day to run', 'd', 'int');
+    }
+
+    protected function main(Options $options)
+    {
+        $year = $options->getOpt('year');
+        $day = $options->getOpt('day');
+
+        $this->runDays(
+            $year && $this->validYear((int) $year) ? (int) $year: null,
+            $day && $this->validDay((int) $day) ? (int) $day: null
+        );
+    }
+
+    private function runDays(?int $year = null, ?int $day = null)
+    {
+        $startYear = !is_null($year) ? $year : self::START_YEAR;
+        $endYear = !is_null($year) ? $year : self::END_YEAR;
+        $startDay = !is_null($day) ? $day : self::START_DAY;
+        $endDay = !is_null($day) ? $day : self::END_DAY;
+
+        /**
+         * @var array<int>
+         */
+        $years = [];
+
+        for ($i = $startYear; $i <= $endYear; $i++) {
+            $years[] = $i;
+        }
+
+        /**
+         * @var array<int>
+         */
+        $days = [];
+        for ($i = $startDay; $i <= $endDay; $i++) {
+            $days[] = $i;
+        }
+        /**
+         * @var array<class-string>
+         */
+        $classes = [];
+        foreach ($years as $year) {
+            foreach ($days as $day) {
+                $class = '\AOC\Year' . $year . '\Day' . str_pad((string)$day, 2, '0', STR_PAD_LEFT) . '\Main';
+                if (class_exists($class) && in_array(MainInterface::class, class_implements($class))) {
+                    $classes["{$year}-{$day}"] = $class;
+                }
+            }
+        }
+
+        if(empty($classes)) {
+            $this->error('No days found for the given year and day.');
+            return;
+        }
+
+        //run each class and print the answer
+        foreach ($classes as $key => $class) {
+            $answer = (new $class())->run();
+            $this->info(
+                sprintf(
+                    'Day: %s, Answer: %s',
+                    $key,
+                    $answer
+                )
+            );
+        }
+    }
+
+    private function validYear(int $year)
+    {
+        return $year >= self::START_YEAR && $year <= self::END_YEAR;
+    }
+
+    private function validDay(int $day)
+    {
+        return $day >= self::START_DAY && $day <= self::END_DAY;
+    }
+}
+
+$handler = new Handler();
+$handler->run();
