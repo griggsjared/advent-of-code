@@ -40,7 +40,10 @@ class Main implements MainInterface
         return array_sum($top3);
     }
 
-    private function groups()
+    /**
+     * @return array<array<int>>
+     */
+    private function groups(): array
     {
         //split into groups and values for each row in group, also cast to int
         return array_map(
@@ -52,7 +55,10 @@ class Main implements MainInterface
         );
     }
 
-    private function groupsSums()
+    /**
+     * @return array<int>
+     */
+    private function groupsSums(): array
     {
         //sum for each group
         return array_map(

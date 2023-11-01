@@ -91,8 +91,13 @@ final class Handler extends CLI
             );
             $this->success(
                 sprintf(
-                    'Part 1: %s | Part 2: %s',
+                    'Part 1: %s ⭐️',
                     $part1Answer,
+                )
+            );
+            $this->success(
+                sprintf(
+                    'Part 2: %s ⭐️',
                     $part2answer
                 )
             );
