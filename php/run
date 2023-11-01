@@ -81,26 +81,46 @@ final class Handler extends CLI
              * @var MainInterface
              */
             $dayClass = new $class();
-            $part1Answer = $dayClass->run(PartEnum::P1);
-            $part2answer = $dayClass->run(PartEnum::P2);
             $this->info(
                 sprintf(
                     'Answers for Day: %s',
                     $key,
                 )
             );
-            $this->success(
-                sprintf(
-                    'Part 1: %s ⭐️',
-                    $part1Answer,
-                )
-            );
-            $this->success(
-                sprintf(
-                    'Part 2: %s ⭐️',
-                    $part2answer
-                )
-            );
+
+            try {
+                $part1Answer = $dayClass->run(PartEnum::P1);
+                $this->success(
+                    sprintf(
+                        'Part 1: %s ⭐️',
+                        $part1Answer,
+                    )
+                );
+            } catch (Exception $e) {
+                $this->error(
+                    sprintf(
+                        'Part 1: %s',
+                        $e->getMessage()
+                    )
+                );
+            }
+
+            try {
+                $part2answer = $dayClass->run(PartEnum::P2);
+                $this->success(
+                    sprintf(
+                        'Part 2: %s ⭐️',
+                        $part2answer
+                    )
+                );
+            } catch (Exception $e) {
+                $this->error(
+                    sprintf(
+                        'Part 2: %s',
+                        $e->getMessage()
+                    )
+                );
+            }
         }
     }
 

@@ -33,7 +33,7 @@ class Main implements MainInterface
         //foreach round, get the score for the match and then add the weapon score for the self,
         //then sum the scores
         $roundScores = array_map(
-            function($round) use ($weaponMap) {
+            function ($round) use ($weaponMap) {
                 $selfWeapon = $weaponMap[$round[1]];
                 $opponentWeapon = $round[0];
 
@@ -60,7 +60,7 @@ class Main implements MainInterface
         //foreach each round, we need to look find the weapon result that === round[1] when we have round[0],
         //then we can get the score for the match and add the weapon score for the self
         $roundScores = array_map(
-            function($round) use ($possibleWeapons, $matchCache) {
+            function ($round) use ($possibleWeapons, $matchCache) {
                 foreach($possibleWeapons as $weapon) {
                     $selfWeapon = $weapon;
                     $opponentWeapon = $round[0];
@@ -95,8 +95,8 @@ class Main implements MainInterface
         //split the input into rounds split on new lines,
         //further split each round into opponent [0] and self [1] split on space
         return array_map(
-            fn($group) => array_map(
-                fn($value) => $value,
+            fn ($group) => array_map(
+                fn ($value) => $value,
                 explode(" ", $group)
             ),
             explode("\n", $this->getInput())

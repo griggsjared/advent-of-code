@@ -47,8 +47,8 @@ class Main implements MainInterface
     {
         //split into groups and values for each row in group, also cast to int
         return array_map(
-            fn($group) => array_map(
-                fn($value) => (int) $value,
+            fn ($group) => array_map(
+                fn ($value) => (int) $value,
                 explode("\n", $group)
             ),
             explode("\n\n", $this->getInput())
@@ -62,7 +62,7 @@ class Main implements MainInterface
     {
         //sum for each group
         return array_map(
-            fn($group) => array_sum($group),
+            fn ($group) => array_sum($group),
             $this->groups()
         );
     }
