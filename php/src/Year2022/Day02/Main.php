@@ -86,7 +86,6 @@ class Main implements MainInterface
         return array_sum($roundScores);
     }
 
-
     /**
      * @return array<array<string>>
      */
