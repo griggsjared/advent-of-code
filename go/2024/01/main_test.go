@@ -1,7 +1,6 @@
 package main_test
 
 import (
-	// "fmt"
 	"testing"
 
 	main "github.com/griggsjared/advent-of-code/go/2024/01"
