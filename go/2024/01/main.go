@@ -6,12 +6,19 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+
+	"github.com/griggsjared/advent-of-code/go/internal"
+)
+
+const (
+  day = 1
+  year = 2024
 )
 
 func main() {
-	fmt.Println("Advent of Code 2024 - Day 1")
 
-	input, err := loadInput("./2024/01/input.txt")
+  internal.DisplayDayHeader(day, year)
+	input, err := internal.LoadDayInput(day, year)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -32,25 +39,6 @@ func main() {
 		return
 	}
 	fmt.Println(p2)
-}
-
-// loadInput is a helper function to load the input file into a string given a file path
-func loadInput(fpath string) (string, error) {
-	i, err := os.ReadFile(fpath)
-	if err != nil {
-		return "", err
-	}
-
-	if len(i) == 0 {
-		return "", fmt.Errorf("Input file is empty")
-	}
-
-	// remove newline character from input if it exists
-	if i[len(i)-1] == 10 {
-		i = i[:len(i)-1]
-	}
-
-	return string(i), nil
 }
 
 func parseLists(i string) ([]int, []int) {
