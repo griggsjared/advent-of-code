@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -9,35 +8,12 @@ import (
 )
 
 const (
-  day = 2
-  year = 2024
+	day  = 2
+	year = 2024
 )
 
 func main() {
-  
-  internal.DisplayDayHeader(day, year)
-	  
-  input, err := internal.LoadDayInput(day, year)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Println("Part 1")
-	p1, err := Part1(input)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(p1)
-
-	fmt.Println("Part 2")
-	p2, err := Part2(input)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(p2)
+	internal.ProcessAndDisplayResults(day, year, Part1, Part2)
 }
 
 func Part1(i string) (int, error) {
@@ -47,9 +23,9 @@ func Part1(i string) (int, error) {
 	safe := 0
 	for _, row := range rows {
 		rowValues := strings.Split(row, " ")
-    if rowIsSafe(rowValues) {
-      safe++
-    }
+		if rowIsSafe(rowValues) {
+			safe++
+		}
 	}
 
 	return safe, nil
@@ -60,35 +36,35 @@ func Part2(i string) (int, error) {
 	rows := strings.Split(i, "\n")
 
 	safe := 0
-  
-  for _, row := range rows {
-    rowValues := strings.Split(row, " ")
-    
-    rowSafe := rowIsSafe(rowValues)
-    if ! rowSafe {
-      //we will remove a single value from the row and check if it is safe with that value removed,
-      //if it is, we will increment the safe count and move to the next row
-      for i := range rowValues {
 
-        //copy the row so we can remove a value
-        newRow := make([]string, len(rowValues))
-        copy(newRow, rowValues)
+	for _, row := range rows {
+		rowValues := strings.Split(row, " ")
 
-        //remove the value at index i
-        newRow = append(newRow[:i], newRow[i+1:]...)
+		rowSafe := rowIsSafe(rowValues)
+		if !rowSafe {
+			//we will remove a single value from the row and check if it is safe with that value removed,
+			//if it is, we will increment the safe count and move to the next row
+			for i := range rowValues {
 
-        //check if the new row is safe
-        if rowIsSafe(newRow) {
-          safe++
-          break
-        }
-      }
-    }
+				//copy the row so we can remove a value
+				newRow := make([]string, len(rowValues))
+				copy(newRow, rowValues)
 
-    if rowSafe {
-      safe++
-    }
-  }
+				//remove the value at index i
+				newRow = append(newRow[:i], newRow[i+1:]...)
+
+				//check if the new row is safe
+				if rowIsSafe(newRow) {
+					safe++
+					break
+				}
+			}
+		}
+
+		if rowSafe {
+			safe++
+		}
+	}
 
 	return safe, nil
 }
@@ -145,5 +121,5 @@ func rowIsSafe(row []string) bool {
 		}
 	}
 
-  return isSafe
+	return isSafe
 }

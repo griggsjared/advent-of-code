@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
 	"slices"
 	"strconv"
 	"strings"
@@ -11,34 +9,12 @@ import (
 )
 
 const (
-  day = 1
-  year = 2024
+	day  = 1
+	year = 2024
 )
 
 func main() {
-
-  internal.DisplayDayHeader(day, year)
-	input, err := internal.LoadDayInput(day, year)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Println("Part 1")
-	p1, err := Part1(input)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(p1)
-
-	fmt.Println("Part 2")
-	p2, err := Part2(input)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(p2)
+	internal.ProcessAndDisplayResults(day, year, Part1, Part2)
 }
 
 func parseLists(i string) ([]int, []int) {
