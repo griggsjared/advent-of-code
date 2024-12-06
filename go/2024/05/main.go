@@ -63,7 +63,7 @@ func Part2(input string) (int, error) {
 	return sum, nil
 }
 
-func sliceIndex(haystack []string, needle string) int { lg
+func sliceIndex(haystack []string, needle string) int {
 	for i, item := range haystack {
 		if item == needle {
 			return i
