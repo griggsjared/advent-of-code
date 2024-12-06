@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	day  = 1
-	year = 2024
+	day  = 1 // Change this to the day you are working on
+	year = 2024 // Change this to the year you are working on
 )
 
 func main() {
