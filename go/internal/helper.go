@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -21,7 +22,7 @@ func LoadDayInput(day int, year int) (string, error) {
 
 	str := string(i)
 
-	//trim the input to remove empty lines
+  str = strings.TrimLeft(str, "\n")
 	str = strings.TrimRight(str, "\n")
 
 	return str, nil
@@ -64,31 +65,39 @@ type partFunc func(i string) (int, error)
 func ProcessAndDisplayResults(day int, year int, p1 partFunc, p2 partFunc) {
 	fmt.Println(FmtWithColor(Blue, "Advent of Code %d - Day %d", year, day))
 
-	input, err := LoadDayInput(day, year)
+	i, err := LoadDayInput(day, year)
 	if err != nil {
 		fmt.Println(FmtWithColor(Red, err.Error()))
 		return
 	}
+
+	var wg sync.WaitGroup
+
+	wg.Add(2)
+
+  go runPart(p1, i, 1, &wg)
+  go runPart(p2, i, 2, &wg)
+
+	wg.Wait()
+}
+
+func runPart(p partFunc, i string, pn int, wg *sync.WaitGroup) {
+
+	var outputLns []string
+  defer func() {
+    fmt.Println(strings.Join(outputLns, "\n"))
+  }()
+  
+  defer wg.Done()
 
 	sTime := time.Now()
-	fmt.Println(FmtWithColor(Green, "Part 1:"))
-	result1, err := p1(input)
+	outputLns = append(outputLns, fmt.Sprintf(FmtWithColor(Green, fmt.Sprintf("Part %d:", pn))))
+  eTime := time.Now()
+	res, err := p(i)
 	if err != nil {
-		fmt.Println(FmtWithColor(Red, err.Error()))
-		return
-  }
-	eTime := time.Now()
-	fmt.Println(FmtWithColor(Cyan, fmt.Sprintf("%d 🌟", result1)))
-	fmt.Println(FmtWithColor(Yellow, "(Time: %v)", eTime.Sub(sTime)))
-
-	sTime = time.Now()
-	fmt.Println(FmtWithColor(Green, "Part 2:"))
-	result2, err := p2(input)
-	if err != nil {
-		fmt.Println(FmtWithColor(Red, err.Error()))
+    outputLns = append(outputLns, FmtWithColor(Red, err.Error()))
 		return
 	}
-	eTime = time.Now()
-	fmt.Println(FmtWithColor(Cyan, fmt.Sprintf("%d 🌟", result2)))
-	fmt.Println(FmtWithColor(Yellow, "(Time: %v)", eTime.Sub(sTime)))
+  outputLns = append(outputLns, FmtWithColor(Cyan, fmt.Sprintf("%d 🌟", res)))
+  outputLns = append(outputLns, FmtWithColor(Yellow, "(Time: %v)", eTime.Sub(sTime))) 
 }
