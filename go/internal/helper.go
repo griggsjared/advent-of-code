@@ -71,7 +71,6 @@ func ProcessAndDisplayResults(day int, year int, p1 partFunc, p2 partFunc) {
 	}
 
 	sTime := time.Now()
-
 	fmt.Println(FmtWithColor(Green, "Part 1:"))
 	result1, err := p1(input)
 	if err != nil {
