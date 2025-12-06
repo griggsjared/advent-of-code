@@ -73,8 +73,12 @@ create_day() {
     sed "s|github.com/griggsjared/advent-of-code/go/year/day|github.com/griggsjared/advent-of-code/go/$year/$day_padded|" \
         "$SCRIPT_DIR/starter/main_test.go" > "$day_dir/main_test.go"
     
+    # Create empty input.txt file
+    echo -e "${CYAN}Creating $year/$day_padded/input.txt...${NC}"
+    touch "$day_dir/input.txt"
+    
     echo -e "${GREEN}Successfully created files for $year day $day!${NC}"
-    echo -e "${YELLOW}Don't forget to create $year/$day_padded/input.txt with your puzzle input${NC}"
+    echo -e "${YELLOW}Don't forget to add your puzzle input to $year/$day_padded/input.txt${NC}"
     return 0
 }
 
@@ -108,6 +112,13 @@ check_files() {
         if [ ! -f "$day_dir/input.txt" ]; then
             echo -e "${RED}Error: $year/$day_padded/input.txt not found!${NC}"
             echo -e "${YELLOW}Please create an input file at $year/$day_padded/input.txt${NC}"
+            return 1
+        fi
+        
+        # Check if input.txt is empty
+        if [ ! -s "$day_dir/input.txt" ]; then
+            echo -e "${RED}Error: $year/$day_padded/input.txt is empty!${NC}"
+            echo -e "${YELLOW}Please add your puzzle input to $year/$day_padded/input.txt${NC}"
             return 1
         fi
     fi
