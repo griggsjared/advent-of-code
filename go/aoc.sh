@@ -15,17 +15,67 @@ print_usage() {
     echo -e "${BLUE}Advent of Code Go Runner${NC}"
     echo ""
     echo "Usage:"
+    echo "  ./aoc.sh create [YEAR] [DAY]"
     echo "  ./aoc.sh [test|run] [YEAR] [DAY]"
     echo "  ./aoc.sh [test|run] [YEAR] all"
     echo "  ./aoc.sh [test|run] all"
     echo ""
     echo "Examples:"
+    echo "  ./aoc.sh create 2024 1         # Create files for day 1 of 2024"
     echo "  ./aoc.sh test 2024 1           # Test day 1 of 2024"
     echo "  ./aoc.sh run 2024 1            # Run day 1 of 2024"
     echo "  ./aoc.sh test 2024 all         # Test all days of 2024"
     echo "  ./aoc.sh run all               # Run all available days"
     echo "  ./aoc.sh test                  # Interactive mode"
     echo ""
+}
+
+# Function to create a new day from starter template
+create_day() {
+    local year=$1
+    local day=$2
+    local day_padded=$(printf "%02d" $day)
+    local day_dir="$SCRIPT_DIR/$year/$day_padded"
+    
+    # Validate year
+    if ! [[ "$year" =~ ^[0-9]{4}$ ]]; then
+        echo -e "${RED}Error: Year must be a 4-digit number${NC}"
+        return 1
+    fi
+    
+    # Validate day
+    if ! [[ "$day" =~ ^[0-9]+$ ]] || [ "$day" -lt 1 ] || [ "$day" -gt 25 ]; then
+        echo -e "${RED}Error: Day must be a number between 1 and 25${NC}"
+        return 1
+    fi
+    
+    # Check if directory already exists
+    if [ -d "$day_dir" ]; then
+        echo -e "${YELLOW}Directory $year/$day_padded already exists!${NC}"
+        read -p "Overwrite? (y/N): " confirm
+        if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+            echo -e "${CYAN}Cancelled${NC}"
+            return 1
+        fi
+    fi
+    
+    # Create directory
+    mkdir -p "$day_dir"
+    
+    # Copy and modify main.go
+    echo -e "${CYAN}Creating $year/$day_padded/main.go...${NC}"
+    sed -e "s/day  = 9999/day  = $day/" \
+        -e "s/year = 9999/year = $year/" \
+        "$SCRIPT_DIR/starter/main.go" > "$day_dir/main.go"
+    
+    # Copy and modify main_test.go
+    echo -e "${CYAN}Creating $year/$day_padded/main_test.go...${NC}"
+    sed "s|github.com/griggsjared/advent-of-code/go/year/day|github.com/griggsjared/advent-of-code/go/$year/$day_padded|" \
+        "$SCRIPT_DIR/starter/main_test.go" > "$day_dir/main_test.go"
+    
+    echo -e "${GREEN}Successfully created files for $year day $day!${NC}"
+    echo -e "${YELLOW}Don't forget to create $year/$day_padded/input.txt with your puzzle input${NC}"
+    return 0
 }
 
 # Function to check if required files exist
@@ -253,11 +303,18 @@ main() {
         print_usage
         echo -e "${YELLOW}No arguments provided. Starting interactive mode...${NC}"
         echo ""
-        read -p "Choose mode (test/run): " mode
+        read -p "Choose mode (create/test/run): " mode
         
-        if [ "$mode" != "test" ] && [ "$mode" != "run" ]; then
-            echo -e "${RED}Invalid mode. Must be 'test' or 'run'${NC}"
+        if [ "$mode" != "create" ] && [ "$mode" != "test" ] && [ "$mode" != "run" ]; then
+            echo -e "${RED}Invalid mode. Must be 'create', 'test', or 'run'${NC}"
             exit 1
+        fi
+        
+        if [ "$mode" = "create" ]; then
+            read -p "Enter year: " year
+            read -p "Enter day: " day
+            create_day "$year" "$day"
+            exit $?
         fi
         
         interactive_mode "$mode"
@@ -266,8 +323,19 @@ main() {
     
     local mode=$1
     
+    # Handle create command
+    if [ "$mode" = "create" ]; then
+        if [ $# -ne 3 ]; then
+            echo -e "${RED}Error: create requires YEAR and DAY arguments${NC}"
+            print_usage
+            exit 1
+        fi
+        create_day "$2" "$3"
+        exit $?
+    fi
+    
     if [ "$mode" != "test" ] && [ "$mode" != "run" ]; then
-        echo -e "${RED}Invalid mode. Must be 'test' or 'run'${NC}"
+        echo -e "${RED}Invalid mode. Must be 'create', 'test', or 'run'${NC}"
         print_usage
         exit 1
     fi
